@@ -1,0 +1,117 @@
+{
+  "system": {
+    "log_level": "INFO",
+    "max_memory_mb": 8192,
+    "enable_gpu": true,
+    "update_rate_hz": 100,
+    "buffer_size": 1024,
+    "emergency_stop_enabled": true,
+    "temperature_limit_c": 80.0,
+    "power_limit_w": 500.0
+  },
+  "hardware": {
+    "motors": {
+      "enabled": true,
+      "default_type": "servo",
+      "max_speed": 10.0,
+      "max_acceleration": 5.0,
+      "max_torque": 15.0,
+      "gear_ratio": 10.0,
+      "encoder_resolution": 4096
+    },
+    "audio": {
+      "enabled": true,
+      "sample_rate": 44100,
+      "buffer_size": 1024,
+      "channels": 2,
+      "bit_depth": 16,
+      "input_device": null,
+      "output_device": null,
+      "latency": "low",
+      "gain_left": 1.0,
+      "gain_right": 1.0,
+      "noise_threshold": 0.01
+    },
+    "vision": {
+      "enabled": true,
+      "max_resolution": [1920, 1080],
+      "processing_threads": 4,
+      "color_space": "bgr",
+      "bit_depth": 8,
+      "compression_quality": 95,
+      "enable_gpu": true
+    },
+    "structure": {
+      "default_height": 1.75,
+      "default_weight_target": 75,
+      "material_database": "config/materials.json"
+    }
+  },
+  "ai": {
+    "enabled": true,
+    "models": {
+      "cache_size_mb": 1024,
+      "memory_limit_mb": 4096,
+      "default_models": [
+        "text_generator",
+        "embedding_model"
+      ]
+    },
+    "local_models": {
+      "text_generator": {
+        "id": "text_generator",
+        "name": "Local Text Generator",
+        "type": "text_generation",
+        "model_path": "models/text_generator",
+        "config_path": "models/text_generator/config.json",
+        "tokenizer_path": "models/text_generator/tokenizer",
+        "max_sequence_length": 512,
+        "batch_size": 1,
+        "device": "auto",
+        "precision": "fp16"
+      },
+      "embedding_model": {
+        "id": "embedding_model",
+        "name": "Local Embedding Model",
+        "type": "embedding",
+        "model_path": "models/embedding_model",
+        "config_path": "models/embedding_model/config.json",
+        "tokenizer_path": "models/embedding_model/tokenizer",
+        "max_sequence_length": 512,
+        "batch_size": 1,
+        "device": "auto",
+        "precision": "fp16"
+      }
+    }
+  },
+  "communication": {
+    "zmq_port": 5555,
+    "ws_port": 8765,
+    "node_id": "nexum_core",
+    "heartbeat_interval": 10
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "nexum.log",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "max_file_size_mb": 100,
+    "backup_count": 5
+  },
+  "safety": {
+    "emergency_stop": {
+      "enabled": true,
+      "trigger_conditions": [
+        "temperature_limit",
+        "power_limit",
+        "collision_detection",
+        "manual_trigger"
+      ]
+    },
+    "limits": {
+      "max_motor_speed": 20.0,
+      "max_joint_angle": 180.0,
+      "max_force": 1000.0,
+      "max_acceleration": 10.0
+    }
+  }
+}
