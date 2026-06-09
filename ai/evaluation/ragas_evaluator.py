@@ -79,16 +79,38 @@ class RagasEvaluator:
         """Run Ragas evaluation"""
         metrics = metrics or self.config["ragas"]["metrics"]
         
-        # Map metric names to Ragas metric objects
-        metric_map = {
-            "faithfulness": faithfulness,
-            "answer_relevancy": answer_relevancy,
-            "context_precision": context_precision,
-            "context_recall": context_recall,
-            "context_entity_recall": context_entity_recall
+        # Instantiate metrics with LLM and embeddings for newer Ragas versions
+        from ragas.metrics import (
+            Faithfulness,
+            AnswerRelevancy,
+            ContextPrecision,
+            ContextRecall,
+            ContextEntityRecall
+        )
+        
+        # Map metric names to Ragas metric classes
+        metric_classes = {
+            "faithfulness": Faithfulness,
+            "answer_relevancy": AnswerRelevancy,
+            "context_precision": ContextPrecision,
+            "context_recall": ContextRecall,
+            "context_entity_recall": ContextEntityRecall
         }
         
-        selected_metrics = [metric_map[m] for m in metrics if m in metric_map]
+        # Instantiate metrics with configured LLM and embeddings
+        selected_metrics = []
+        for m in metrics:
+            if m in metric_classes:
+                try:
+                    # Try instantiating with LLM and embeddings (newer Ragas versions)
+                    metric_instance = metric_classes[m](
+                        llm=self.llm,
+                        embeddings=self.embeddings
+                    )
+                    selected_metrics.append(metric_instance)
+                except TypeError:
+                    # Fallback for older Ragas versions that don't require instantiation
+                    selected_metrics.append(metric_classes[m]())
         
         # Run evaluation
         results = evaluate(

@@ -16,7 +16,13 @@ import hashlib
 import torch
 import torch.nn as nn
 import numpy as np
-from transformers import AutoTokenizer, AutoModel, AutoConfig
+from transformers import (
+    AutoTokenizer, 
+    AutoModel, 
+    AutoModelForCausalLM,
+    AutoModelForSeq2SeqLM,
+    AutoConfig
+)
 import h5py
 
 
@@ -189,7 +195,22 @@ class LocalModel:
             
             # Load model
             if self.config.type == ModelType.TEXT_GENERATION:
-                self.model = AutoModel.from_pretrained(
+                # Use AutoModelForCausalLM for text generation models (properly exposes .generate())
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    self.config.model_path,
+                    config=model_config,
+                    torch_dtype=torch.float16 if self.config.precision == "fp16" else torch.float32
+                )
+                
+                # Load tokenizer
+                if self.config.tokenizer_path:
+                    self.tokenizer = AutoTokenizer.from_pretrained(self.config.tokenizer_path)
+                else:
+                    self.tokenizer = AutoTokenizer.from_pretrained(self.config.model_path)
+            
+            elif self.config.type == ModelType.TRANSLATION:
+                # Use AutoModelForSeq2SeqLM for translation models
+                self.model = AutoModelForSeq2SeqLM.from_pretrained(
                     self.config.model_path,
                     config=model_config,
                     torch_dtype=torch.float16 if self.config.precision == "fp16" else torch.float32
