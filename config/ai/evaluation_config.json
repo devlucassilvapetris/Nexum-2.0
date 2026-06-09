@@ -1,0 +1,33 @@
+{
+  "ragas": {
+    "metrics": [
+      "faithfulness",
+      "answer_relevancy",
+      "context_precision",
+      "context_recall",
+      "context_entity_recall"
+    ],
+    "batch_size": 10,
+    "embeddings": {
+      "model": "sentence-transformers/all-MiniLM-L6-v2"
+    },
+    "llm": {
+      "provider": "vllm",
+      "model": "./checkpoints/final"
+    }
+  },
+  "wandb": {
+    "enabled": true,
+    "project": "nexum-evaluation",
+    "entity": null
+  },
+  "dataset": {
+    "test_file": "./data/test.jsonl",
+    "ground_truth_file": "./data/ground_truth.jsonl"
+  },
+  "output": {
+    "results_dir": "./evaluation_results",
+    "save_predictions": true,
+    "save_detailed_metrics": true
+  }
+}

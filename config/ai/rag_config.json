@@ -1,0 +1,38 @@
+{
+  "vector_db": {
+    "type": "milvus",
+    "host": "localhost",
+    "port": 19530,
+    "collection_name": "nexum_documents",
+    "vector_size": 384,
+    "distance": "Cosine"
+  },
+  "qdrant": {
+    "enabled": false,
+    "host": "localhost",
+    "port": 6333,
+    "collection_name": "nexum_documents",
+    "dimension": 384,
+    "distance": "Cosine"
+  },
+  "embedding": {
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "device": "cuda",
+    "batch_size": 32
+  },
+  "retrieval": {
+    "top_k": 5,
+    "score_threshold": 0.7,
+    "search_type": "similarity"
+  },
+  "llm": {
+    "provider": "vllm",
+    "model": "./checkpoints/final",
+    "temperature": 0.7,
+    "max_tokens": 512
+  },
+  "instructor": {
+    "enabled": true,
+    "response_model": "nexum.ai.rag.schemas.Answer"
+  }
+}

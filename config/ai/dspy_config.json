@@ -1,0 +1,28 @@
+{
+  "lm": {
+    "provider": "vllm",
+    "model": "./checkpoints/final",
+    "api_base": "http://localhost:8000/v1",
+    "api_key": "empty",
+    "temperature": 0.7,
+    "max_tokens": 512
+  },
+  "rm": {
+    "provider": "sentence-transformers",
+    "model": "sentence-transformers/all-MiniLM-L6-v2"
+  },
+  "optimization": {
+    "num_trials": 10,
+    "max_bootstrapped_demos": 5,
+    "max_labeled_demos": 5,
+    "teacher_settings": {
+      "temperature": 0.7,
+      "max_tokens": 512
+    }
+  },
+  "teleprompter": {
+    "type": "BootstrapFewShot",
+    "max_labeled_demos": 5,
+    "max_rounds": 1
+  }
+}
