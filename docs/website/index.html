@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexum v2.0 - Hybrid Operating System Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        nexum: {
+                            primary: '#0f172a',
+                            secondary: '#1e293b',
+                            accent: '#3b82f6',
+                            accentLight: '#60a5fa',
+                            accentDark: '#2563eb',
+                            success: '#10b981',
+                            warning: '#f59e0b',
+                            danger: '#ef4444',
+                        }
+                    },
+                    animation: {
+                        'gradient': 'gradient 8s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .gradient-bg {
+            background: linear-gradient(-45deg, #0f172a, #1e293b, #3b82f6, #1e40af);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .code-block {
+            background: #1e293b;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+        }
+        .sidebar-link.active {
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            color: white;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+<body class="bg-nexum-primary text-gray-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                            Nexum v2.0
+                        </span>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#overview" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Overview</a>
+                            <a href="#features" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Features</a>
+                            <a href="#ai-ml" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">AI/ML</a>
+                            <a href="#performance" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Performance</a>
+                            <a href="#installation" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Installation</a>
+                            <a href="#api" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">API</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <a href="https://github.com/nexum/nexum2.0" target="_blank" class="bg-nexum-accent hover:bg-nexum-accentDark text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105">
+                        <i class="fab fa-github mr-2"></i>GitHub
+                    </a>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#overview" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Overview</a>
+                <a href="#features" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Features</a>
+                <a href="#ai-ml" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">AI/ML</a>
+                <a href="#performance" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Performance</a>
+                <a href="#installation" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Installation</a>
+                <a href="#api" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">API</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-20 left-20 w-72 h-72 bg-blue-500 rounded-full filter blur-3xl animate-pulse-slow"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/2 left-1/2 w-80 h-80 bg-cyan-500 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 4s;"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+            <div class="animate-float">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 mb-8 shadow-2xl">
+                    <i class="fas fa-robot text-4xl text-white"></i>
+                </div>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-blue-200 to-blue-400 bg-clip-text text-transparent">
+                Nexum v2.0
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                Bridging Human and Machine Intelligence
+            </p>
+            <p class="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
+                A sophisticated hybrid operating system combining robotics, computer vision, and advanced artificial intelligence for next-generation human-machine interaction.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#installation" class="bg-nexum-accent hover:bg-nexum-accentDark text-white px-8 py-4 rounded-lg text-lg font-medium transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-download mr-2"></i>Get Started
+                </a>
+                <a href="#features" class="glass text-white px-8 py-4 rounded-lg text-lg font-medium transition-all duration-300 transform hover:scale-105 hover:bg-white/10">
+                    <i class="fas fa-play mr-2"></i>Learn More
+                </a>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#overview" class="text-gray-400 hover:text-white transition-colors">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                    System Architecture
+                </h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    A layered architecture designed for seamless integration between hardware, AI, and vision systems.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass rounded-xl p-6 feature-card transition-all duration-300">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-microchip text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Kernel Layer</h3>
+                    <p class="text-gray-400 text-sm">System management, communication protocols, and hardware interfaces for low-latency performance.</p>
+                </div>
+                
+                <div class="glass rounded-xl p-6 feature-card transition-all duration-300">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-cogs text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Hardware Layer</h3>
+                    <p class="text-gray-400 text-sm">Kinematics control, biomimetic audio systems, and mechanical structure management.</p>
+                </div>
+                
+                <div class="glass rounded-xl p-6 feature-card transition-all duration-300">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-brain text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">AI Layer</h3>
+                    <p class="text-gray-400 text-sm">Local models, neural networks, generative AI, fine-tuning, and advanced ML capabilities.</p>
+                </div>
+                
+                <div class="glass rounded-xl p-6 feature-card transition-all duration-300">
+                    <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-eye text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Vision Layer</h3>
+                    <p class="text-gray-400 text-sm">Real-time image processing, object recognition, and environmental scene analysis.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI/ML Features Section -->
+    <section id="ai-ml" class="py-20 px-4 bg-nexum-secondary">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                    AI/ML Stack
+                </h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Enterprise-grade AI/ML capabilities with cutting-edge technologies for training, serving, and evaluation.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Training & Fine-tuning -->
+                <div class="glass rounded-xl p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-graduation-cap text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold">Training & Fine-tuning</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>Unsloth:</strong> Efficient fine-tuning with memory optimizations</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>PEFT:</strong> Parameter-Efficient Fine-Tuning with LoRA adapters</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>PyTorch + Transformers:</strong> Deep learning framework integration</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>Weights & Biases:</strong> Experiment tracking and monitoring</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Model Serving -->
+                <div class="glass rounded-xl p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-14 h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-server text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold">Model Serving</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>vLLM:</strong> High-throughput LLM serving with PagedAttention</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>Ray Serve:</strong> Scalable deployment with autoscaling</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>REST API:</strong> Standardized API for model inference</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>60% GPU Utilization:</strong> Optimized resource efficiency</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- RAG -->
+                <div class="glass rounded-xl p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-database text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold">RAG System</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>LangChain:</strong> Orchestration framework for RAG pipelines</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>Milvus:</strong> Enterprise-grade vector database (billions of vectors)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>Qdrant:</strong> Lightweight vector database for rapid PoCs</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>Instructor:</strong> Structured outputs with Pydantic schemas</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Prompt Optimization -->
+                <div class="glass rounded-xl p-8">
+                    <div class="flex items-center mb-6">
+                        <div class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-magic text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold">Prompt Optimization</h3>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>DSPy:</strong> Programmatic prompting with automatic optimization</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>Pre-built Modules:</strong> RAG, QA, Classification, Summarization</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>Translation:</strong> Multi-language translation support</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-nexum-success mt-1 mr-3"></i>
+                            <span><strong>Code Generation:</strong> Automated code generation module</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Evaluation -->
+            <div class="mt-8 glass rounded-xl p-8">
+                <div class="flex items-center mb-6">
+                    <div class="w-14 h-14 bg-gradient-to-br from-red-400 to-red-600 rounded-xl flex items-center justify-center mr-4">
+                        <i class="fas fa-chart-line text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold">Evaluation & Monitoring</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <h4 class="font-semibold mb-3 text-nexum-accentLight">Ragas Metrics</h4>
+                        <ul class="space-y-2 text-gray-400 text-sm">
+                            <li>• Faithfulness</li>
+                            <li>• Answer Relevancy</li>
+                            <li>• Context Precision</li>
+                            <li>• Context Recall</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3 text-nexum-accentLight">Weights & Biases</h4>
+                        <ul class="space-y-2 text-gray-400 text-sm">
+                            <li>• Experiment tracking</li>
+                            <li>• Visualization</li>
+                            <li>• Model artifacts</li>
+                            <li>• Real-time monitoring</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3 text-nexum-accentLight">Production Ready</h4>
+                        <ul class="space-y-2 text-gray-400 text-sm">
+                            <li>• Comprehensive metrics</li>
+                            <li>• Automated evaluation</li>
+                            <li>• Performance tracking</li>
+                            <li>• CI/CD integration</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section id="performance" class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                    Performance & Efficiency
+                </h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Engineered for optimal resource utilization with minimal hardware footprint.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="glass rounded-xl p-6 text-center feature-card transition-all duration-300">
+                    <div class="text-4xl font-bold text-nexum-accentLight mb-2">60%</div>
+                    <div class="text-gray-400 text-sm">GPU Utilization</div>
+                    <div class="text-xs text-gray-500 mt-1">During inference</div>
+                </div>
+                <div class="glass rounded-xl p-6 text-center feature-card transition-all duration-300">
+                    <div class="text-4xl font-bold text-nexum-accentLight mb-2">15-25ms</div>
+                    <div class="text-gray-400 text-sm">Inference Latency</div>
+                    <div class="text-xs text-gray-500 mt-1">Per token (Llama-3-8B)</div>
+                </div>
+                <div class="glass rounded-xl p-6 text-center feature-card transition-all duration-300">
+                    <div class="text-4xl font-bold text-nexum-accentLight mb-2">40-60</div>
+                    <div class="text-gray-400 text-sm">Tokens/Second</div>
+                    <div class="text-xs text-gray-500 mt-1">Per GPU throughput</div>
+                </div>
+                <div class="glass rounded-xl p-6 text-center feature-card transition-all duration-300">
+                    <div class="text-4xl font-bold text-nexum-accentLight mb-2">4x</div>
+                    <div class="text-gray-400 text-sm">Memory Reduction</div>
+                    <div class="text-xs text-gray-500 mt-1">With 4-bit quantization</div>
+                </div>
+            </div>
+            
+            <div class="glass rounded-xl p-8">
+                <h3 class="text-2xl font-semibold mb-6">Benchmark Results (RTX 3060 12GB)</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-300">Memory Usage</span>
+                            <span class="text-nexum-accentLight">6-8GB VRAM</span>
+                        </div>
+                        <div class="w-full bg-nexum-secondary rounded-full h-2">
+                            <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style="width: 67%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-300">Training Speed</span>
+                            <span class="text-nexum-accentLight">2-3x faster</span>
+                        </div>
+                        <div class="w-full bg-nexum-secondary rounded-full h-2">
+                            <div class="bg-gradient-to-r from-purple-400 to-purple-600 h-2 rounded-full" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-300">PEFT Parameters</span>
+                            <span class="text-nexum-accentLight">&lt;1% additional</span>
+                        </div>
+                        <div class="w-full bg-nexum-secondary rounded-full h-2">
+                            <div class="bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full" style="width: 5%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="installation" class="py-20 px-4 bg-nexum-secondary">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                    Installation
+                </h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Get started with Nexum v2.0 in minutes.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6">Prerequisites</h3>
+                    <div class="glass rounded-xl p-6 space-y-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-nexum-success mr-3"></i>
+                            <span>Python 3.8 or higher</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-nexum-success mr-3"></i>
+                            <span>CUDA-capable GPU (required for LLM)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-nexum-success mr-3"></i>
+                            <span>Minimum 16GB RAM (32GB+ recommended)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-nexum-success mr-3"></i>
+                            <span>NVIDIA GTX 1080 / RTX 3050 (4GB+ VRAM)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6">Quick Start</h3>
+                    <div class="code-block p-4 text-sm">
+                        <pre class="text-gray-300"><code><span class="text-green-400"># Clone the repository</span>
+git clone https://github.com/nexum/nexum2.0.git
+cd nexum2.0
+
+<span class="text-green-400"># Install dependencies</span>
+pip install -r requirements.txt
+
+<span class="text-green-400"># Install the package</span>
+pip install -e .
+
+<span class="text-green-400"># Initialize the system</span>
+nexum --init</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Section -->
+    <section id="api" class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                    API Reference
+                </h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Simple and intuitive APIs for all system components.
+                </p>
+            </div>
+            
+            <div class="space-y-8">
+                <!-- Fine-tuning API -->
+                <div class="glass rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-nexum-accentLight">Fine-tuning API</h3>
+                    <div class="code-block p-4 text-sm overflow-x-auto">
+                        <pre class="text-gray-300"><code><span class="text-purple-400">from</span> nexum.ai.training <span class="text-purple-400">import</span> Trainer
+
+<span class="text-green-400"># Initialize trainer</span>
+trainer = Trainer(<span class="text-orange-400">"config/ai/training_config.json"</span>)
+
+<span class="text-green-400"># Run fine-tuning</span>
+output_dir = trainer.train()</code></pre>
+                    </div>
+                </div>
+                
+                <!-- RAG API -->
+                <div class="glass rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-nexum-accentLight">RAG API</h3>
+                    <div class="code-block p-4 text-sm overflow-x-auto">
+                        <pre class="text-gray-300"><code><span class="text-purple-400">from</span> nexum.ai.rag <span class="text-purple-400">import</span> RAGEngine
+
+<span class="text-green-400"># Initialize RAG engine</span>
+rag = RAGEngine(<span class="text-orange-400">"config/ai/rag_config.json"</span>)
+
+<span class="text-green-400"># Add documents</span>
+documents = [{<span class="text-orange-400">"id"</span>: <span class="text-orange-400">"doc1"</span>, <span class="text-orange-400">"content"</span>: <span class="text-orange-400">"..."</span>}]
+rag.add_documents(documents)
+
+<span class="text-green-400"># Query</span>
+response = rag.query(<span class="text-orange-400">"What is Nexum v2.0?"</span>)</code></pre>
+                    </div>
+                </div>
+                
+                <!-- Serving API -->
+                <div class="glass rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-nexum-accentLight">Model Serving API</h3>
+                    <div class="code-block p-4 text-sm overflow-x-auto">
+                        <pre class="text-gray-300"><code><span class="text-purple-400">from</span> nexum.ai.serving <span class="text-purple-400">import</span> VLLMServe, RayDeployer
+
+<span class="text-green-400"># Direct vLLM serving</span>
+vllm_serve = VLLMServe(<span class="text-orange-400">"config/ai/serving_config.json"</span>)
+outputs = vllm_serve.generate([<span class="text-orange-400">"Hello, world!"</span>])
+
+<span class="text-green-400"># Deploy with Ray Serve</span>
+deployer = RayDeployer(<span class="text-orange-400">"config/ai/serving_config.json"</span>)
+deployment = deployer.deploy()</code></pre>
+                    </div>
+                </div>
+                
+                <!-- Evaluation API -->
+                <div class="glass rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-nexum-accentLight">Evaluation API</h3>
+                    <div class="code-block p-4 text-sm overflow-x-auto">
+                        <pre class="text-gray-300"><code><span class="text-purple-400">from</span> nexum.ai.evaluation <span class="text-purple-400">import</span> Evaluator
+
+<span class="text-green-400"># Initialize evaluator</span>
+evaluator = Evaluator(<span class="text-orange-400">"config/ai/evaluation_config.json"</span>)
+
+<span class="text-green-400"># Evaluate</span>
+results = evaluator.evaluate(dataset)</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-4 bg-nexum-secondary border-t border-gray-800">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Nexum v2.0</h4>
+                    <p class="text-gray-400 text-sm">Bridging Human and Machine Intelligence</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#overview" class="hover:text-white transition-colors">Overview</a></li>
+                        <li><a href="#features" class="hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#ai-ml" class="hover:text-white transition-colors">AI/ML</a></li>
+                        <li><a href="#api" class="hover:text-white transition-colors">API</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Community</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="https://github.com/nexum/nexum2.0" class="hover:text-white transition-colors">GitHub</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Discord</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Documentation</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">License</h4>
+                    <p class="text-gray-400 text-sm">MIT License</p>
+                    <p class="text-gray-500 text-xs mt-2">© 2026 Nexum Development Team</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
+                <p>Built with passion for the future of human-machine interaction.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
